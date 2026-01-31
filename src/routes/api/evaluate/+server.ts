@@ -1,10 +1,10 @@
-import { GROQ_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import Groq from 'groq-sdk';
 import { json } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
 
 const groq = new Groq({
-    apiKey: GROQ_API_KEY
+    apiKey: env.GROQ_API_KEY
 });
 
 export const POST = async ({ request }: RequestEvent) => {

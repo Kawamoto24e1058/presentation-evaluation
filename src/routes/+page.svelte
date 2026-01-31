@@ -749,7 +749,7 @@
 <canvas bind:this={bgCanvas} class="bg-canvas"></canvas>
 
 <div class="container">
-    <h1>AI Presentation Coach</h1>
+    <h1>Vocalog AI</h1>
     <p>
         マイクに向かってプレゼンを行ってください。リアルタイムで文字起こしされ、AIが評価します。
     </p>
@@ -951,32 +951,26 @@
 </div>
 
 <svelte:head>
-    <title>AIプレゼンコーチ - 声と星空でフィードバック</title>
+    <title>Vocalog AI - 声と星空のプレゼンコーチ</title>
     <meta
         name="description"
         content="1分間のスピーチで、構成・話し方・個性をAIが即座に分析。「星空」のような美しいビジュアルと共に、あなたのプレゼンをコーチングします。"
     />
 
     <!-- OGP -->
-    <meta
-        property="og:title"
-        content="AIプレゼンコーチ - 声と星空でフィードバック"
-    />
+    <meta property="og:title" content="Vocalog AI - 声と星空のプレゼンコーチ" />
     <meta
         property="og:description"
         content="1分間のスピーチで、構成・話し方・個性をAIが即座に分析。"
     />
     <meta property="og:type" content="website" />
-    <meta
-        property="og:url"
-        content="https://presentation-evaluation.vercel.app"
-    />
+    <meta property="og:url" content="https://vocalog-ai.vercel.app" />
     <!-- Placeholder -->
     <meta property="og:image" content="/ogp-image.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AIプレゼンコーチ" />
+    <meta name="twitter:title" content="Vocalog AI" />
     <meta
         name="twitter:description"
         content="1分間のスピーチで、構成・話し方・個性をAIが即座に分析。"
@@ -984,6 +978,8 @@
 </svelte:head>
 
 <style>
+    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;700&display=swap");
+
     :global(:root) {
         /* Night Theme Variables */
         --bg-color: #0f172a; /* Slate 900 (Deep Night) */
@@ -996,7 +992,7 @@
     }
 
     :global(body) {
-        font-family: "Helvetica Neue", Arial, sans-serif;
+        font-family: "Outfit", "Helvetica Neue", Arial, sans-serif;
         /* background-color: var(--bg-color); */
         color: var(--text-color);
         margin: 0;
@@ -1043,9 +1039,16 @@
     h1 {
         text-align: center;
         color: var(--text-color);
-        font-weight: 300;
-        letter-spacing: 0.05em;
-        margin-bottom: 40px;
+        font-weight: 800; /* Extra Bold */
+        font-size: 4.5rem; /* Much Larger */
+        letter-spacing: -0.02em; /* Tighter for modern look */
+        margin-bottom: 20px;
+        text-shadow: 0 0 30px rgba(190, 242, 100, 0.3); /* Integrated Glow */
+        background: linear-gradient(to right, #ffffff, #bef264);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block; /* For gradient text */
+        width: 100%;
     }
 
     /* .evaluate-btn unused styles removed */

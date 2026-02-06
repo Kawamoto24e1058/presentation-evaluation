@@ -96,7 +96,7 @@
             recognition.onresult = (event: any) => {
                 // SOFTWARE MUTE SYNC:
                 // Only accept results if the visualizer detects audio.
-                if (audioLevel < 0.005) return;
+                if (audioLevel < 0.02) return;
 
                 let finalTranscript = "";
                 // Loop through results

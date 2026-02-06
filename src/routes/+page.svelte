@@ -2,6 +2,9 @@
     import { onMount, onDestroy, tick } from "svelte";
 
     let transcript = $state("");
+    let interimTranscript = $state(""); // Real-time interim results
+    let currentParagraph = $state(""); // Buffer for continuous speech
+    let lastCommitTime = 0;
     let isRecording = $state(false);
     let isTestMode = $state(false);
     let timerInterval: any = $state(null);
@@ -98,16 +101,24 @@
                 // Only accept results if the visualizer detects audio.
                 if (audioLevel < 0.02) return;
 
-                let finalTranscript = "";
+                if (audioLevel < 0.02) return;
+
+                let newFinalChunk = "";
+                interimTranscript = ""; // Reset interim on new result batch
+
                 // Loop through results
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
-                        finalTranscript += event.results[i][0].transcript;
+                        newFinalChunk += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
                     }
                 }
 
-                if (finalTranscript) {
-                    transcript += (transcript ? "\n" : "") + finalTranscript;
+                if (newFinalChunk) {
+                    // Normalize: remove spacing because JA doesn't need it usually, but let's be safe
+                    // For Japanese, usually no space.
+                    currentParagraph += newFinalChunk;
                 }
             };
 
@@ -349,6 +360,21 @@
                                 pauseCount++;
                                 pauseTotalDuration += duration;
                             }
+                        }
+                    }
+
+                    // 2-Second Silence Commit Logic
+                    if (
+                        isRecording &&
+                        isPaused &&
+                        currentParagraph.length > 0
+                    ) {
+                        const silenceDuration = now - pauseStartTime;
+                        if (silenceDuration > 2000) {
+                            // Commit the paragraph
+                            transcript +=
+                                (transcript ? "\n" : "") + currentParagraph;
+                            currentParagraph = "";
                         }
                     }
 
@@ -834,6 +860,8 @@
                 >
             {:else}
                 {transcript}
+                <span class="current-paragraph">{currentParagraph}</span>
+                <span class="interim">{interimTranscript}</span>
             {/if}
             {#if isRecording}
                 <span class="cursor">|</span>
@@ -1194,9 +1222,14 @@
     }
 
     canvas {
-        border-radius: 8px;
-        border: none;
         background: transparent;
+    }
+
+    .interim {
+        color: rgba(255, 255, 255, 0.5); /* Dimmed text for interim */
+    }
+    .current-paragraph {
+        color: rgba(255, 255, 255, 0.9);
     }
 
     .transcript-box {

@@ -75,7 +75,7 @@
     let pauseStartTime = 0;
     let lastMaxBin = 0;
 
-    const SILENCE_THRESHOLD = 0.05; // Adjust as needed
+    const SILENCE_THRESHOLD = 0.02; // Adjust as needed
     const PAUSE_MIN_DURATION = 300; // ms
 
     // Speech Recognition State
@@ -96,7 +96,7 @@
             recognition.onresult = (event: any) => {
                 // SOFTWARE MUTE SYNC:
                 // Only accept results if the visualizer detects audio.
-                if (audioLevel < 0.01) return;
+                if (audioLevel < 0.005) return;
 
                 let finalTranscript = "";
                 // Loop through results
@@ -204,7 +204,11 @@
         let stream: MediaStream;
         try {
             stream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
+                audio: {
+                    autoGainControl: true,
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                },
             });
         } catch (e: any) {
             if (
@@ -250,7 +254,7 @@
             }
             const rms = Math.sqrt(sumSquares / bufferLength);
             // Boost sensitivity
-            audioLevel = Math.min(rms * 5, 1);
+            audioLevel = Math.min(rms * 15, 1);
 
             // 2. Calculate Pitch (Simple Peak Frequency)
             let maxBin = 0;
